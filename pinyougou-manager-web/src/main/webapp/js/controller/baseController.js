@@ -1,4 +1,4 @@
-app.controller('baseController',function ($scope) {
+app.controller('baseController', function ($scope) {
     //分页控件配置  currentPage:当前页  totalItems:总记录数 itemsPerPage:每页记录数  perPageOptions:分页选项  onChange:当页码重新变更后自动触发的方法
     $scope.paginationConf = {
         currentPage: 1,
@@ -32,7 +32,18 @@ app.controller('baseController',function ($scope) {
         }
     }
 
-
+    //提取json字符串数据中某个属性，返回拼接字符串 逗号分隔
+    $scope.jsonToString = function (jsonString, key) {
+        var json = JSON.parse(jsonString);//将json字符串转换为json对象
+        var value = "";
+        for (var i = 0; i < json.length; i++) {
+            if (i > 0) {
+                value += ","
+            }
+            value += json[i][key];
+        }
+        return value;
+    }
 
 
 })

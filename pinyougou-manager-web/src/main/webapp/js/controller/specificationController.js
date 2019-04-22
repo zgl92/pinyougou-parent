@@ -79,13 +79,12 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
 
 
 	//新增选项行
-
 	// $scope.entity={specificationOptionList:[]};
     $scope.addTableRow=function(){
         $scope.entity.specificationOptionList.push({});
     }
 
-    //批量选项删除
+    //删除规格选项行
     $scope.deleTableRow=function(index){
         $scope.entity.specificationOptionList.splice(index,1);//删除
     }

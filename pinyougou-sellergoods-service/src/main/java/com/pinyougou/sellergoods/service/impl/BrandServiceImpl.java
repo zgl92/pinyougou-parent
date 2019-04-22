@@ -1,6 +1,7 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -80,8 +81,9 @@ public class BrandServiceImpl implements BrandService {
 
 
     /**
-     *  条件分页查询
-     * @param brand   条件
+     * 条件分页查询
+     *
+     * @param brand    条件
      * @param pageNum  当前页 码
      * @param pageSize 每页记录数
      * @return
@@ -112,4 +114,12 @@ public class BrandServiceImpl implements BrandService {
 
     }
 
+
+    /**
+     * 列表数据
+     */
+    public List<Map> selectOptionList() {
+        return brandMapper.selectOptionList();
+
+    }
 }

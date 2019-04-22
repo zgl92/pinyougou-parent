@@ -1,9 +1,11 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import com.pinyougou.mapper.TbSpecificationOptionMapper;
 import com.pinyougou.pojo.TbSpecificationOption;
+import com.pinyougou.pojo.TbSpecificationOptionExample;
 import com.pinyougou.pojogroup.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -54,8 +56,11 @@ public class SpecificationServiceImpl implements SpecificationService {
      */
     @Override
     public void add(Specification specification) {
+
+        //插入实体
         specificationMapper.insert(specification.getSpecification());//插入规格
-        //循环插入规格选项
+
+        //循环插入规格选项 集合
         for (TbSpecificationOption specificationOption : specification.getSpecificationOptionList()) {
             specificationOption.setSpecId(specification.getSpecification().getId());//设置规格ID		specificationOptionMapper.insert(specificationOption);
             tbSpecificationOptionMapper.insert(specificationOption); //新增规格
@@ -67,8 +72,26 @@ public class SpecificationServiceImpl implements SpecificationService {
      * 修改
      */
     @Override
-    public void update(TbSpecification specification) {
-        specificationMapper.updateByPrimaryKey(specification);
+    public void update(Specification specification) {
+
+        //获取规格实体
+        TbSpecification tbSpecification = specification.getSpecification();
+        specificationMapper.updateByPrimaryKey(tbSpecification);
+
+        //删除原来规格对应的规格选项
+        TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+        TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+        criteria.andSpecIdEqualTo(tbSpecification.getId());
+        tbSpecificationOptionMapper.deleteByExample(example);
+
+        //获取规格选项集合
+        List<TbSpecificationOption> specificationOptionList = specification.getSpecificationOptionList();
+        for (TbSpecificationOption option : specificationOptionList) {
+
+            option.setSpecId(tbSpecification.getId()); //设置规格id
+
+            tbSpecificationOptionMapper.insert(option); //新增规格
+        }
     }
 
     /**
@@ -78,8 +101,22 @@ public class SpecificationServiceImpl implements SpecificationService {
      * @return
      */
     @Override
-    public TbSpecification findOne(Long id) {
-        return specificationMapper.selectByPrimaryKey(id);
+    public Specification findOne(Long id) {
+        Specification specification = new Specification();
+
+        //获取规格实体
+        TbSpecification tbSpecification = specificationMapper.selectByPrimaryKey(id);
+        specification.setSpecification(tbSpecification);
+
+        //获取规格选项列表
+        TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+        TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+        criteria.andSpecIdEqualTo(id);
+        List<TbSpecificationOption> specificationOptions = tbSpecificationOptionMapper.selectByExample(example);
+        specification.setSpecificationOptionList(specificationOptions);
+
+        return specification;  //组合实体类
+
     }
 
     /**
@@ -87,8 +124,17 @@ public class SpecificationServiceImpl implements SpecificationService {
      */
     @Override
     public void delete(Long[] ids) {
+
+
         for (Long id : ids) {
+            //删除规格表数据
             specificationMapper.deleteByPrimaryKey(id);
+
+            //删除规格选项表数据
+            TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+            TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+            criteria.andSpecIdEqualTo(id);
+            tbSpecificationOptionMapper.deleteByExample(example);
         }
     }
 
@@ -109,6 +155,14 @@ public class SpecificationServiceImpl implements SpecificationService {
 
         Page<TbSpecification> page = (Page<TbSpecification>) specificationMapper.selectByExample(example);
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 规格下拉列表
+     * @return
+     */
+    public List<Map> selectOptionList() {
+        return specificationMapper.selectOptionList();
     }
 
 }
