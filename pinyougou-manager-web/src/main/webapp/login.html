@@ -37,7 +37,7 @@
 						<img src="../img/wx_cz.jpg" />
 					</div>
 					<div id="profile" class="tab-pane  active">
-						<form class="sui-form">
+						<!--<form class="sui-form">
 							<div class="input-prepend"><span class="add-on loginname"></span>
 								<input id="prependedInput" type="text" placeholder="邮箱/用户名/手机号" class="span2 input-xfat">
 							</div>
@@ -53,9 +53,28 @@
 							<div class="logined">
 								<a class="sui-btn btn-block btn-xlarge btn-danger" href="admin/index.html" target="_blank">登&nbsp;&nbsp;录</a>
 							</div>
-						</form>
+						</form>-->
 
-					</div>
+                        <form id="loginform" action="/login" method="post"  class="sui-form">
+                            <div class="input-prepend"><span class="add-on loginname"></span>
+                                <input id="prependedInput"  name="username" type="text" placeholder="邮箱/用户名/手机号" class="span2 input-xfat">
+                            </div>
+                            <div class="input-prepend"><span class="add-on loginpwd"></span>
+                                <input id="prependedInput"  name="password" type="password" placeholder="请输入密码" class="span2 input-xfat">
+                            </div>
+                            <div class="setting">
+                                <div id="slider">
+                                    <div id="slider_bg"></div>
+                                    <span id="label">>></span> <span id="labelTip">拖动滑块验证</span>
+                                </div>
+                            </div>
+                            <div class="logined">
+                                <a class="sui-btn btn-block btn-xlarge btn-danger" onclick="document:loginform.submit()" target="_blank">登&nbsp;&nbsp;录</a>
+                            </div>
+                        </form>
+
+
+                    </div>
 				</div>
 			</div>
 			<div class="clearfix"></div>
@@ -88,7 +107,7 @@
 <script>
 	$(function(){
 		var slider = new SliderUnlock("#slider",{
-				successLabelTip : "欢迎访问品优购"	
+				successLabelTip : "欢迎访问品优购"
 			},function(){
 				// alert("验证成功,即将跳转至首页");
             	// window.location.href="index.html"
